@@ -2,10 +2,34 @@
 
 Step 1: Run your application on Cloud9 OR Hugging Face Spaces [2 point]
         1.1 Take the testing dataset from Colab and save into a csv file
+            -> Run the step "Download the dataset" from this collab notebook
+            -> https://colab.research.google.com/drive/14kVhXNx4D-DMppR9_tCE3Pc_iNnNltqG#scrollTo=W-M_jM840AMp
+
         1.2 Update your application files to include prometheus-client 
         library and methods to send prometheus supported metrics whenever 
         a request is made to/metrics endpoint
-        1.3 Create a Dockerfile to dockerize the application
+            -> Update app.py with these lines
+            -> import prometheus_client as prom
+            -> r2_metric = 
+                prom.Gauge('predict_death__r2_score', 
+                            'R2 score for random 100 test samples')
+                            # Function for updating metrics
+            -> def update_metrics():
+            ->  test = test_data.sample(100)
+            ->  test_feat = test.drop('cnt', axis=1)
+            ->  test_cnt = test['cnt'].values
+            ->  test_pred = make_prediction(input_data=test_feat)['predictions']
+            ->  r2 = r2_score(test_cnt, test_pred).round(3)
+            ->  r2_metric.set(r2)
+            ->
+            -> @app.get("/metrics")
+            ->
+            -> async def get_metrics():
+            ->  update_metrics()
+            ->  return Response(media_type="text/plain",
+            ->      content = prom.generate_latest())
+
+        1.3 Create a Dockerfile to dockerize the application 
         1.4 Run your application either on Cloud9 OR using Hugging Face Spaces
         1.5 Access your application and check its /metrics endpoint (Debug if 
         error persists)
@@ -45,4 +69,3 @@ Step 6: CAUTION ! Clean up [ 1 point ]
             ○ EC2 instance associated
             ○ Security Group associated
 
-            
