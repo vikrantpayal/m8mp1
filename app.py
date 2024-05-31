@@ -2,10 +2,12 @@ import gradio
 import numpy as np
 import joblib
 from xgboost import XGBClassifier
+import pandas as pd 
+from sklearn.metrics import r2_score 
 import prometheus_client as prom
 
-r2_metric = prom.Gauge('predict_death_r2_score', 'R2 score for random 100 test
-samples')
+test_data = pd.read_csv(curr_path + "dataset/heart_failure_clinical_records_dataset.csv")
+r2_metric = prom.Gauge('predict_death_r2_score', 'R2 score for random 100 test samples') 
 
 # Function for updating metrics
 def update_metrics():
