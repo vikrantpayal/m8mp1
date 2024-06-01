@@ -6,7 +6,7 @@ import pandas as pd
 from sklearn.metrics import r2_score 
 import prometheus_client as prom
 
-test_data = pd.read_csv(curr_path + "dataset/heart_failure_clinical_records_dataset.csv")
+test_data = pd.read_csv("./dataset/heart_failure_clinical_records_dataset.csv")
 r2_metric = prom.Gauge('predict_death_r2_score', 'R2 score for random 100 test samples') 
 
 # Function for updating metrics
@@ -14,7 +14,7 @@ def update_metrics():
   test = test_data.sample(100)
   test_feat = test.drop('cnt', axis=1)
   test_cnt = test['cnt'].values
-  test_pred = make_prediction(input_data=test_feat)['predictions']
+  test_pred = predict_death_event(input_data=test_feat)['predictions'] # check if parameters passed match those received
   r2 = r2_score(test_cnt, test_pred).round(3)
   r2_metric.set(r2)
 
@@ -22,9 +22,7 @@ def update_metrics():
 
 async def get_metrics():
   update_metrics()
-  return Response(media_type="text/plain",
-
-content = prom.generate_latest())
+  return Response(media_type="text/plain", content = prom.generate_latest())
 
 # Replace 'path/to/model.pkl' with the actual path to your saved model
 model = joblib.load('xgboost-model.pkl')

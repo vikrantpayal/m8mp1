@@ -1,9 +1,12 @@
 # m7_mp01_surv_predict
 
 Step 1: Run your application on Cloud9 OR Hugging Face Spaces [2 point]
+
         1.1 Take the testing dataset from Colab and save into a csv file
             -> Run the step "Download the dataset" from this collab notebook
             -> https://colab.research.google.com/drive/14kVhXNx4D-DMppR9_tCE3Pc_iNnNltqG#scrollTo=W-M_jM840AMp
+
+
 
         1.2 Update your application files to include prometheus-client 
         library and methods to send prometheus supported metrics whenever 
@@ -29,8 +32,19 @@ Step 1: Run your application on Cloud9 OR Hugging Face Spaces [2 point]
             ->  return Response(media_type="text/plain",
             ->      content = prom.generate_latest())
 
+
+
         1.3 Create a Dockerfile to dockerize the application 
+            -> Add these lines in the existing Dockerfile
+            -> ADD *.whl .
+            -> WORKDIR .
+            -> RUN rm *.whl 
+            -> COPY app/. app/.
+            -> EXPOSE 8080 
+            
+
         1.4 Run your application either on Cloud9 OR using Hugging Face Spaces
+            -> ??? 
         1.5 Access your application and check its /metrics endpoint (Debug if 
         error persists)
 
